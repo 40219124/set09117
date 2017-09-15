@@ -1,6 +1,5 @@
 previous = 0
 current = 1
-combo = 1
 addEvens = 0
 while True:
     combo = current + previous
