@@ -7,7 +7,7 @@ while True:
         break
     previous = current
     current = combo
-    if combo%2 == 0:
+    if combo % 2 == 0:
         addEvens += combo
-print (addEvens)
+print(addEvens)
 input("Enter to close.")
