@@ -1,32 +1,24 @@
 valueLeft = 999
 valueRight = 999
-value = 0
-notDone = True
-while notDone:
+highest = 0
+while True:
     value = valueLeft * valueRight
-    if value == int(str(value)[::-1]):
-        notDone = False
+    if value > highest:
+        if value == int(str(value)[::-1]):
+            highest = value
+            valueLeft -= 1
+            valueRight = valueLeft
+        else:
+            valueRight -= 1
     else:
         if valueLeft == valueRight:
-            valueRight -= 1
-        else:
-            valueLeft -= 1
-outLeft = 0
-outRight = 0
-while True:
-    if valueRight == 999:
-        valueLeft += 1
+            break
+        valueLeft -= 1
         valueRight = valueLeft
-    else:
-        valueRight += 1
-    if valueLeft == 999 and valueRight == 999:
+    if valueRight == 99:
+        valueLeft -= 1
+        valueRight = valueLeft
+    if valueLeft == 100:
         break
-    tempValue = valueLeft * valueRight
-    if tempValue == int(str(tempValue)[::-1]):
-        if tempValue > value:
-            value = tempValue
-            outLeft = valueLeft
-            outRight = valueRight
-
-print(outLeft, value, outRight)
+print(highest)
 input("Enter to close.")
