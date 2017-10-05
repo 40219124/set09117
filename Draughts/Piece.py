@@ -7,10 +7,6 @@ class Piece(object):
     def __init__(self, faction, rank):
         self.faction = faction
         self.rank = rank
-        if faction == 0:
-            self.display = Piece.white
-        else:
-            self.display = Piece.black
 
     def rank_up(self):
         self.rank += 1
@@ -22,6 +18,6 @@ class Piece(object):
         elif self.faction == 0:
             output += Piece.white[line_no]
         else:
-            output +=  Piece.black[line_no]
+            output += Piece.black[line_no]
         output += " "
         return output
