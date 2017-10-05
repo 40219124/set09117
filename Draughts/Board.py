@@ -13,7 +13,7 @@ class Board(object):
         self.number_column = []
         for i in range(8):
             self.number_column.append([])
-            self.number_column[i] = ["   ", "   ", " " + str(i+1) + " ", "   ", "   "]
+            self.number_column[i] = ["   ", " " + str(i+1) + " ", "   "]
 
     def default_board(self):
         self.left_row(0, 1)

@@ -1,0 +1,3 @@
+C:\ProgramData\Anaconda3\python.exe C:\Users\tssan\Documents\set09117\Draughts\GameMaster.py
+
+this command works on my surface
