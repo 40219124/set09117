@@ -7,9 +7,18 @@ class Piece(object):
     def __init__(self, faction, rank):
         self.faction = faction
         self.rank = rank
+        self.selected = 0
 
     def rank_up(self):
         self.rank += 1
+
+    def select(self):
+        assert self.selected != 1, "Piece already selected"
+        self.selected = 1
+
+    def deselect(self):
+        assert self.selected != 0, "Piece not selected"
+        self.selected = 0
 
     def print(self, line_no):
         output = " "
