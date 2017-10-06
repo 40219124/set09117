@@ -20,22 +20,23 @@ class Board(object):
             self.number_column[i] = ["   ", " " + str(i+1) + " ", "   "]
 
     def default_board(self):
-        self.left_row(0, 1)
+        '''self.left_row(0, 1)
         self.right_row(1, 1)
-        self.left_row(2, 1)
-        self.right_row(5, 0)
+        self.left_row(2, 1)'''
+        self.left_row(4, 1)
+        # self.right_row(5, 0)
         self.left_row(6, 0)
-        self.right_row(7, 0)
+        # self.right_row(7, 0)
 
     def left_row(self, row, faction):
         for i in range(0, 8, 2):
-            piece = Piece(faction, 0)
-            self.squares[(row, i)].set_content(piece)
+            piece = Piece(faction, 1)
+            self.squares[(i, row)].set_content(piece)
 
     def right_row(self, row, faction):
         for i in range(1, 8, 2):
             piece = Piece(faction, 0)
-            self.squares[(row, i)].set_content(piece)
+            self.squares[(i, row)].set_content(piece)
 
     def print(self):
 
@@ -53,7 +54,7 @@ class Board(object):
         print("---'-------'-------'-------'-------'-------'-------'-------'-------'")
 
     def square_text(self, line_no, column):
-        return Square.print(self.squares[(line_no // 4, column)], line_no % 4) + "|"
+        return Square.print(self.squares[(column, line_no // 4)], line_no % 4) + "|"
 
     def move(self, start, finish):
         self.squares[str_to_tup(finish)].set_content(self.squares[str_to_tup(start)].content)
@@ -74,6 +75,9 @@ class Board(object):
 
     def piece_faction(self, piece):
         return self.squares[str_to_tup(piece)].content.faction
+
+    def piece_rank(self, piece):
+        return self.squares[str_to_tup(piece)].content.rank
 
     def square_highlighted(self, loc):
         return self.squares[str_to_tup(loc)].highlighted

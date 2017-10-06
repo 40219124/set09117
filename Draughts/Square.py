@@ -15,10 +15,13 @@ class Square(object):
 
     def set_content(self, piece):
         assert isinstance(piece, Piece), "Data is not of type 'Piece'"
-        self.content = piece
+        self.content.equals(piece)
+        for i in range(2):
+            if self.y == i * 7 and self.content.faction == i and self.content.rank == 0:
+                self.content.rank_up()
 
     def delete_content(self):
-        self.content = Piece(-1, 0)
+        self.content.clear()
 
     def print(self, line_no):
         assert 0 <= line_no < 3, "Line number, '%r' invalid for squares" % line_no

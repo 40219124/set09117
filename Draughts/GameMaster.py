@@ -24,7 +24,7 @@ class GameMaster(object):
             # if a 2 character input, assume grid square and format appropriately
             elif len(prompt) == 2:
                 if (prompt[0: 1] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and (int(prompt[1]) in range(1, 9)):
-                    prompt = str(int(prompt[1]) - 1) + str(self.lettersToNumbers[prompt[0: 1]])
+                    prompt = str(self.lettersToNumbers[prompt[0: 1]]) + str(int(prompt[1]) - 1)
                 else:
                     print("Invalid grid square.")
                     continue
@@ -72,7 +72,9 @@ class GameMaster(object):
     def sel_and_high(self, prompt):
         self.selected = prompt
         self.board.select_piece(self.selected)
-        self.highlighted = GameLogic.options(self.board, self.selected)
+        self.highlighted = GameLogic.take_options(self.board, self.selected, [])
+        if self.highlighted.__len__() == 0:
+            self.highlighted = (GameLogic.options(self.board, self.selected))
         if len(self.highlighted) > 0:
             for loc in self.highlighted:
                 self.board.highlight_square(loc)
