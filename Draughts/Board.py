@@ -60,8 +60,20 @@ class Board(object):
         self.squares[str_to_tup(start)].deselect_piece()
         self.squares[str_to_tup(start)].delete_content()
 
+    def highlight_square(self, loc):
+        self.squares[str_to_tup(loc)].highlight()
+
+    def low_light_square(self, loc):
+        self.squares[str_to_tup(loc)].low_light()
+
     def select_piece(self, piece):
         self.squares[str_to_tup(piece)].select_piece()
 
     def deselect_piece(self, piece):
         self.squares[str_to_tup(piece)].deselect_piece()
+
+    def piece_faction(self, piece):
+        return self.squares[str_to_tup(piece)].content.faction
+
+    def square_highlighted(self, loc):
+        return self.squares[str_to_tup(loc)].highlighted
