@@ -2,6 +2,10 @@ from Board import Board
 from GameLogic import GameLogic
 
 
+def str_to_tup(string):
+    return int(string[0: 1]), int(string[1])
+
+
 class GameMaster(object):
 
     lettersToNumbers = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
@@ -10,7 +14,7 @@ class GameMaster(object):
         self.board = Board()
         self.active_faction = 0
         self.highlighted = []
-        self.selected = ""
+        self.selected = (-1, -1)
 
     def run_game(self):
         self.board.print()
@@ -23,13 +27,14 @@ class GameMaster(object):
                 break
             # if a 2 character input, assume grid square and format appropriately
             elif len(prompt) == 2:
-                if (prompt[0: 1] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and (int(prompt[1]) in range(1, 9)):
-                    prompt = str(self.lettersToNumbers[prompt[0: 1]]) + str(int(prompt[1]) - 1)
+                if (prompt[0] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and (int(prompt[1]) in range(1, 9)):
+                    prompt = (self.lettersToNumbers[prompt[0]], int(prompt[1]) - 1)
+                    print(prompt)
                 else:
                     print("Invalid grid square.")
                     continue
                 # If no piece is currently selected
-                if self.selected == "":
+                if self.selected == (-1, -1):
                     # If you picked one of your pieces it is now selected
                     if self.active_faction != self.board.piece_faction(prompt):
                         print("Not one of your pieces.")
@@ -43,7 +48,7 @@ class GameMaster(object):
                     self.desel_and_low()
                     self.sel_and_high(prompt)
                 # If an empty space is selected move there
-                elif self.board.square_highlighted(prompt) == 1:
+                elif self.board.square_highlighted(prompt):
                     self.board.move(self.selected, prompt)
                     # Swap the active faction
                     if self.active_faction == 0:
@@ -51,7 +56,7 @@ class GameMaster(object):
                     else:
                         self.active_faction = 0
                     # Deselect the piece
-                    self.selected = ""
+                    self.selected = (-1, -1)
                     if len(self.highlighted) > 0:
                         for loc in self.highlighted:
                             self.board.low_light_square(loc)
@@ -70,9 +75,9 @@ class GameMaster(object):
             # draw highlights
 
     def get_options(self, prompt):
-        self.highlighted = GameLogic.take_options(self.board, self.selected, [])
+        self.highlighted = GameLogic.take_options(self.board, prompt)
         if self.highlighted.__len__() == 0:
-            self.highlighted = (GameLogic.options(self.board, self.selected))
+            self.highlighted = (GameLogic.move_options(self.board, prompt))
 
     def sel_and_high(self, prompt):
         self.selected = prompt
@@ -84,7 +89,7 @@ class GameMaster(object):
 
     def desel_and_low(self):
         self.board.deselect_piece(self.selected)
-        self.selected = ""
+        self.selected = (-1, -1)
         if len(self.highlighted) > 0:
             for loc in self.highlighted:
                 self.board.low_light_square(loc)

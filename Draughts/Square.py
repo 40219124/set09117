@@ -11,7 +11,7 @@ class Square(object):
         self.x = x
         self.y = y
         self.content = Piece(-1, 0)
-        self.highlighted = 0
+        self.highlighted = False
 
     def set_content(self, piece):
         assert isinstance(piece, Piece), "Data is not of type 'Piece'"
@@ -27,19 +27,19 @@ class Square(object):
         assert 0 <= line_no < 3, "Line number, '%r' invalid for squares" % line_no
         if self.content.selected == 1:
             return self.select_left[line_no] + self.content.print(line_no) + self.select_right[line_no]
-        elif self.highlighted == 1:
+        elif self.highlighted:
             return self.highlight_char + self.content.print(line_no) + self.highlight_char
         return " " + self.content.print(line_no) + " "
 
     def highlight(self):
-        if self.highlighted != 1:
-            self.highlighted = 1
+        if not self.highlighted:
+            self.highlighted = True
         else:
             print("Already highlighted.")
 
     def low_light(self):
-        if self.highlighted != 0:
-            self.highlighted = 0
+        if self.highlighted:
+            self.highlighted = False
         else:
             print("Not highlighted to start with.")
 

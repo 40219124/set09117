@@ -57,27 +57,27 @@ class Board(object):
         return Square.print(self.squares[(column, line_no // 4)], line_no % 4) + "|"
 
     def move(self, start, finish):
-        self.squares[str_to_tup(finish)].set_content(self.squares[str_to_tup(start)].content)
-        self.squares[str_to_tup(start)].deselect_piece()
-        self.squares[str_to_tup(start)].delete_content()
+        self.squares[finish].set_content(self.squares[start].content)
+        self.squares[start].deselect_piece()
+        self.squares[start].delete_content()
 
     def highlight_square(self, loc):
-        self.squares[str_to_tup(loc)].highlight()
+        self.squares[loc].highlight()
 
     def low_light_square(self, loc):
-        self.squares[str_to_tup(loc)].low_light()
+        self.squares[loc].low_light()
 
     def select_piece(self, piece):
-        self.squares[str_to_tup(piece)].select_piece()
+        self.squares[piece].select_piece()
 
     def deselect_piece(self, piece):
-        self.squares[str_to_tup(piece)].deselect_piece()
+        self.squares[piece].deselect_piece()
 
     def piece_faction(self, piece):
-        return self.squares[str_to_tup(piece)].content.faction
+        return self.squares[piece].content.faction
 
     def piece_rank(self, piece):
-        return self.squares[str_to_tup(piece)].content.rank
+        return self.squares[piece].content.rank
 
     def square_highlighted(self, loc):
-        return self.squares[str_to_tup(loc)].highlighted
+        return self.squares[loc].highlighted

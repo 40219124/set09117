@@ -1,6 +1,5 @@
 from Stack import Stack
 from Turn import Turn
-from Move import Move
 
 
 class Timeline(object):

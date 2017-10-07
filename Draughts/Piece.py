@@ -3,24 +3,28 @@ class Piece(object):
     no_piece = ["   ", "   ", "   "]
     white = [" O ", "OOO", " O "]
     black = [" X ", "XXX", " X "]
-    white_crown = ["O O", " O ", "O O"]
-    black_crown = ["X X", " X ", "X X"]
+    white_crown = ["^-^", "OOO", " O "]
+    black_crown = ["^-^", "XXX", " X "]
 
     def __init__(self, faction, rank):
         self.faction = faction
         self.rank = rank
-        self.selected = 0
+        self.selected = False
 
     def rank_up(self):
         self.rank += 1
 
     def select(self):
-        assert self.selected != 1, "Piece already selected"
-        self.selected = 1
+        if not self.selected:
+            self.selected = True
+        else:
+            print("Already selected this piece.")
 
     def deselect(self):
-        assert self.selected != 0, "Piece not selected"
-        self.selected = 0
+        if self.selected:
+            self.selected = False
+        else:
+            print("This piece wasn't selected.")
 
     def equals(self, piece):
         self.faction = piece.faction
