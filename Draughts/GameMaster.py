@@ -69,12 +69,15 @@ class GameMaster(object):
             # else calculate moves
             # draw highlights
 
-    def sel_and_high(self, prompt):
-        self.selected = prompt
-        self.board.select_piece(self.selected)
+    def get_options(self, prompt):
         self.highlighted = GameLogic.take_options(self.board, self.selected, [])
         if self.highlighted.__len__() == 0:
             self.highlighted = (GameLogic.options(self.board, self.selected))
+
+    def sel_and_high(self, prompt):
+        self.selected = prompt
+        self.board.select_piece(self.selected)
+        self.get_options(prompt)
         if len(self.highlighted) > 0:
             for loc in self.highlighted:
                 self.board.highlight_square(loc)
