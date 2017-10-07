@@ -27,7 +27,8 @@ class GameMaster(object):
                 break
             # if a 2 character input, assume grid square and format appropriately
             elif len(prompt) == 2:
-                if (prompt[0] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and (int(prompt[1]) in range(1, 9)):
+                if (prompt[0] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and \
+                        (prompt[1] in ['1', '2', '3', '4', '5', '6', '7', '8']):
                     prompt = (self.lettersToNumbers[prompt[0]], int(prompt[1]) - 1)
                     print(prompt)
                 else:

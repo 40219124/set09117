@@ -2,10 +2,6 @@ from Square import Square
 from Piece import Piece
 
 
-def str_to_tup(string):
-    return int(string[0: 1]), int(string[1])
-
-
 class Board(object):
 
     def __init__(self):
@@ -27,6 +23,8 @@ class Board(object):
         # self.right_row(5, 0)
         self.left_row(6, 0)
         # self.right_row(7, 0)
+        self.make_row(0, 1)
+        self.make_row(1, 0)
 
     def left_row(self, row, faction):
         for i in range(0, 8, 2):
@@ -37,6 +35,11 @@ class Board(object):
         for i in range(1, 8, 2):
             piece = Piece(faction, 0)
             self.squares[(i, row)].set_content(piece)
+
+    def make_row(self, row, faction):
+        for i in range(0, 8):
+            if (row + i) % 2 == 0:
+                self.squares[(i, row)].set_content(Piece(faction, 0))
 
     def print(self):
 
