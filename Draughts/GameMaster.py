@@ -43,10 +43,12 @@ class GameMaster(object):
                     self.sel_and_high(prompt)
                 # If you picked the already selected one, deselect it
                 elif self.selected == prompt:
-                    self.desel_and_low()
+                    self.deselect()
+                    self.low_light()
                 # If you picked another of your faction, make it the selected piece
                 elif self.board.piece_faction(prompt) == self.active_faction:
-                    self.desel_and_low()
+                    self.deselect()
+                    self.low_light()
                     self.sel_and_high(prompt)
                 # If an empty space is selected move there
                 elif self.board.square_highlighted(prompt):
@@ -58,10 +60,7 @@ class GameMaster(object):
                         self.active_faction = 0
                     # Deselect the piece
                     self.selected = (-1, -1)
-                    if len(self.highlighted) > 0:
-                        for loc in self.highlighted:
-                            self.board.low_light_square(loc)
-                    self.highlighted = []
+                    self.low_light()
                 # No valid turn was taken
                 else:
                     print("Please select a valid location to move to.")
@@ -88,9 +87,11 @@ class GameMaster(object):
             for loc in self.highlighted:
                 self.board.highlight_square(loc)
 
-    def desel_and_low(self):
+    def deselect(self):
         self.board.deselect_piece(self.selected)
         self.selected = (-1, -1)
+
+    def low_light(self):
         if len(self.highlighted) > 0:
             for loc in self.highlighted:
                 self.board.low_light_square(loc)
