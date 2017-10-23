@@ -29,7 +29,10 @@ class Square(object):
             return self.select_left[line_no] + self.content.print(line_no) + self.select_right[line_no]
         elif self.highlighted:
             return self.highlight_char + self.content.print(line_no) + self.highlight_char
-        return " " + self.content.print(line_no) + " "
+        if (self.x + self.y) % 2 == 0:
+            return " " + self.content.print(line_no) + " "
+        else:
+            return "███████"
 
     def highlight(self):
         if not self.highlighted:
