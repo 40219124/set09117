@@ -1,10 +1,18 @@
 class Piece(object):
 
-    no_piece = ["   ", "   ", "   "]
-    white = [" O ", "OOO", " O "]
-    black = [" X ", "XXX", " X "]
-    white_crown = ["^-^", "OOO", " O "]
-    black_crown = ["^-^", "XXX", " X "]
+    no_piece = ["     ", "     ", "     "]
+    white = ["     ", "╔═══╗", "╚═══╝"]
+    black = ["┌───┐", "└───┘", "     "]
+    white_crown = ["  ╦  ", "╠═╩═╣", "╚═══╝"]
+    black_crown = ["  ┬  ", "├┴┴┴┤", "└───┘"]
+    '''
+    white_crown = [" ^-^ ", " OOO ", "  O  "]
+    black_crown = [" ^-^ ", " XXX ", "  X  "]
+    ╠ ╣ ╩ ╦ ╬
+    ├ ┤ ┴ ┬ ┼ │ ┌ ┐ └ ┘ ─
+    , "║   ║"
+     "│░░░│",
+    '''
 
     def __init__(self, faction, rank):
         self.faction = faction
@@ -36,7 +44,7 @@ class Piece(object):
         self.selected = 0
 
     def print(self, line_no):
-        output = " "
+        output = ""
         if self.faction < 0:
             output += Piece.no_piece[line_no]
         elif self.faction == 0:
@@ -49,5 +57,5 @@ class Piece(object):
                 output += Piece.black_crown[line_no]
             else:
                 output += Piece.black[line_no]
-        output += " "
+        output += ""
         return output

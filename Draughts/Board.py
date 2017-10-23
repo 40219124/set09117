@@ -43,21 +43,22 @@ class Board(object):
 
     def print(self):
 
-        print("   |   A   |   B   |   C   |   D   |   E   |   F   |   G   |   H   |")
-        print("---+-------+-------+-------+-------+-------+-------+-------+-------|")
+        print("      A      B      C      D      E      F      G      H   ")
+        # print("---+-------+-------+-------+-------+-------+-------+-------+-------|")
         rh = 4
         for line_no in range(rh * 8 - 1):
             if line_no % rh == rh-1:
-                print("---+-------+-------+-------+-------+-------+-------+-------+-------|")
+                heck = 5
+                # print("---+-------+-------+-------+-------+-------+-------+-------+-------|")
             else:
-                output = self.number_column[line_no // rh][line_no % rh] + "|"
+                output = self.number_column[line_no // rh][line_no % rh] # + "|"
                 for column in range(8):
                     output += self.square_text(line_no, column)
                 print(output)
-        print("---'-------'-------'-------'-------'-------'-------'-------'-------'")
+        # print("---'-------'-------'-------'-------'-------'-------'-------'-------'")
 
     def square_text(self, line_no, column):
-        return Square.print(self.squares[(column, line_no // 4)], line_no % 4) + "|"
+        return Square.print(self.squares[(column, line_no // 4)], line_no % 4) # + "|"
 
     def move(self, start, finish):
         self.squares[finish].set_content(self.squares[start].content)
