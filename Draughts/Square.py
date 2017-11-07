@@ -20,6 +20,9 @@ class Square(object):
             if self.y == i * 7 and self.content.faction == i and self.content.rank == 0:
                 self.content.rank_up()
 
+    def get_content(self):
+        return self.content
+
     def delete_content(self):
         self.content.clear()
 

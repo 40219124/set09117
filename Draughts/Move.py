@@ -6,7 +6,7 @@ class Move(object):
     def __init__(self):
         self.start = (-1, -1)
         self.end = (-1, -1)
-        self.did_take = 0
+        self.did_take = False
         self.took_from = (-1, -1)
         self.took_piece = Piece(-1, 0)
 

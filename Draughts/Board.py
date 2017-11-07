@@ -64,6 +64,10 @@ class Board(object):
         self.squares[finish].set_content(self.squares[start].content)
         self.squares[start].deselect_piece()
         self.squares[start].delete_content()
+        # If taking a piece
+        if not (-1 <= finish[0] - start[0] <= 1):
+            taking = ((start[0] + finish[0]) / 2, (start[1] + finish[1]) / 2)
+            self.squares[taking].delete_content()
 
     def highlight_square(self, loc):
         self.squares[loc].highlight()
@@ -85,3 +89,12 @@ class Board(object):
 
     def square_highlighted(self, loc):
         return self.squares[loc].highlighted
+
+    def get_piece(self, loc):
+        return self.squares[loc].get_content()
+
+    def set_piece(self, loc, piece):
+        self.squares[loc].set_content(piece)
+
+    def delete_piece(self, loc):
+        self.squares[loc].delete_content()

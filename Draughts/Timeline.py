@@ -12,6 +12,12 @@ class Timeline(object):
         self.past.push(move)
         self.future.clear()
 
+    def add_past(self, move):
+        self.past.push(move)
+
+    def add_future(self, move):
+        self.future.push(move)
+
     def count_past(self):
         return self.past.size()
 
@@ -21,7 +27,6 @@ class Timeline(object):
     def undo(self):
         if self.count_past() > 0:
             past_turn = self.past.pop()
-            self.future.push(past_turn)
             return past_turn
         else:
             print("Nothing to undo.")
@@ -30,7 +35,6 @@ class Timeline(object):
     def redo(self):
         if self.count_future() > 0:
             future_move = self.future.pop()
-            self.past.push(future_move)
             return future_move
         else:
             print("Nothing to redo.")

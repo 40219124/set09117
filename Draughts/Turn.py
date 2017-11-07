@@ -7,7 +7,7 @@ class Turn(object):
     def __init__(self):
         self.moves = Stack()
 
-    def add_move(self, move):
+    def push_move(self, move):
         if isinstance(move, Move):
             self.moves.push(move)
         else:
