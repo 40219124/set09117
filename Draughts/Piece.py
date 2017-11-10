@@ -20,7 +20,10 @@ class Piece(object):
         self.selected = False
 
     def rank_up(self):
-        self.rank += 1
+        self.rank = True
+
+    def abdicate(self):
+        self.rank = False
 
     def select(self):
         if not self.selected:

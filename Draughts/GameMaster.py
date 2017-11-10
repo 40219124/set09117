@@ -16,7 +16,7 @@ class GameMaster(object):
     def __init__(self):
         self.board = Board()
         self.timeline = Timeline()
-        self.active_faction = 0
+        self.active_faction = 0  # white = 0, black = 1
         self.turn = Turn()
         self.highlighted = []
         self.mid_turn = False
@@ -79,6 +79,9 @@ class GameMaster(object):
                     move = Move()
                     move.start = self.selected
                     move.end = prompt
+                    # If becoming a king this turn
+                    if (8 - self.active_faction) % 8 == prompt[1] and self.board.get_piece(self.selected):
+                        move.crowned = True
                     # If moving into an adjacent empty space
                     if -1 <= prompt[0] - self.selected[0] <= 1:
                         self.board.move(self.selected, prompt)
@@ -166,6 +169,8 @@ class GameMaster(object):
             future.push_move(move)
             self.board.set_piece(move.start, self.board.get_piece(move.end))
             self.board.delete_piece(move.end)
+            if move.crowned:
+                self.board.abdicate(move.start)
             if move.did_take:
                 self.board.set_piece(move.took_from, move.took_piece)
         self.timeline.add_future(future)
@@ -175,6 +180,8 @@ class GameMaster(object):
             move = self.turn.pop_move()
             self.board.set_piece(move.start, self.board.get_piece(move.end))
             self.board.delete_piece(move.end)
+            if move.crowned:
+                self.board.abdicate(move.start)
             if move.did_take:
                 self.board.set_piece(move.took_from, move.took_piece)
         self.turn = Turn()

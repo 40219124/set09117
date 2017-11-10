@@ -26,6 +26,9 @@ class Square(object):
     def delete_content(self):
         self.content.clear()
 
+    def abdicate(self):
+        self.content.abdicate()
+
     def print(self, line_no):
         assert 0 <= line_no < 3, "Line number, '%r' invalid for squares" % line_no
         if self.content.selected == 1:

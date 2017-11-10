@@ -98,3 +98,6 @@ class Board(object):
 
     def delete_piece(self, loc):
         self.squares[loc].delete_content()
+
+    def abdicate(self, loc):
+        self.squares[loc].abdicate()
