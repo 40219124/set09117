@@ -9,20 +9,27 @@ class Board(object):
         for x in range(8):
             for y in range(8):
                 self.squares[(x, y)] = Square(x, y)
-        self.default_board()
+        self.test_board()
+        self.whites = self.get_pieces_of_faction(0)
+        self.blacks = self.get_pieces_of_faction(1)
         self.number_column = []
         for i in range(8):
             self.number_column.append([])
             self.number_column[i] = ["   ", " " + str(i+1) + " ", "   "]
 
     def default_board(self):
-        '''self.left_row(0, 1)
-        self.right_row(1, 1)
-        self.left_row(2, 1)'''
+        self.make_row(0, 1)
+        self.make_row(1, 1)
+        self.make_row(2, 1)
+        self.make_row(5, 0)
+        self.make_row(6, 0)
+        self.make_row(7, 0)
+
+    def test_board(self):
         self.left_row(4, 1)
-        # self.right_row(5, 0)
+        #
         self.left_row(6, 0)
-        # self.right_row(7, 0)
+        #
         self.make_row(0, 1)
         self.make_row(1, 0)
 
@@ -33,13 +40,21 @@ class Board(object):
 
     def right_row(self, row, faction):
         for i in range(1, 8, 2):
-            piece = Piece(faction, 0)
+            piece = Piece(faction, 1)
             self.squares[(i, row)].set_content(piece)
 
     def make_row(self, row, faction):
         for i in range(0, 8):
             if (row + i) % 2 == 0:
                 self.squares[(i, row)].set_content(Piece(faction, 0))
+
+    def get_pieces_of_faction(self, faction):
+        piece_list = []
+        for x in range(8):
+            for y in range(8):
+                if self.get_piece((x, y)).faction == faction:
+                    piece_list.append((x, y))
+        return piece_list
 
     def print(self):
 
