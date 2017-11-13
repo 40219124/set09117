@@ -9,11 +9,12 @@ class Move(object):
         self.crowned = False
         self.did_take = False
         self.took_from = (-1, -1)
-        self.took_piece = Piece(-1, 0)
+        self.took_piece = Piece(-1, False)
 
     def equals(self, move):
         self.start = move.start
         self.end = move.end
+        self.crowned = move.crowned
         self.did_take = move.did_take
         self.took_from = move.took_from
         self.took_piece.equals(move.took_piece)

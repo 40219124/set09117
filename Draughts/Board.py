@@ -4,14 +4,16 @@ from Piece import Piece
 
 class Board(object):
 
+    surround = ["-->", "<--"]
+
     def __init__(self):
         self.squares = {}
         for x in range(8):
             for y in range(8):
                 self.squares[(x, y)] = Square(x, y)
-        self.test_board()
-        self.whites = self.get_pieces_of_faction(0)
-        self.blacks = self.get_pieces_of_faction(1)
+        self.default_board()
+        self.whites, self.blacks = [], []
+        self.find_pieces()
         self.number_column = []
         for i in range(8):
             self.number_column.append([])
@@ -27,9 +29,7 @@ class Board(object):
 
     def test_board(self):
         self.left_row(4, 1)
-        #
         self.left_row(6, 0)
-        #
         self.make_row(0, 1)
         self.make_row(1, 0)
 
@@ -48,32 +48,47 @@ class Board(object):
             if (row + i) % 2 == 0:
                 self.squares[(i, row)].set_content(Piece(faction, 0))
 
-    def get_pieces_of_faction(self, faction):
-        piece_list = []
+    def find_pieces(self):
+        piece_list_white = []
+        piece_list_black = []
         for x in range(8):
             for y in range(8):
-                if self.get_piece((x, y)).faction == faction:
-                    piece_list.append((x, y))
-        return piece_list
+                if self.get_piece((x, y)).faction == 0:
+                    piece_list_white.append((x, y))
+                elif self.get_piece((x, y)).faction == 1:
+                    piece_list_black.append((x, y))
+        self.whites, self.blacks = piece_list_white, piece_list_black
 
-    def print(self):
-
+    def print(self, faction):
+        self.find_pieces()
+        print()
+        print()
+        w_surround = ["   ", "   "]
+        b_surround = w_surround
+        if faction == 0:
+            w_surround = self.surround
+        elif faction == 1:
+            b_surround = self.surround
+        print("  ╔╦═════════════════════════╦╦┬─────────────────────────┬┐")  # 59 chars long
+        print("  ║║  " + w_surround[0] + " WHITE:      " + str(len(self.whites)).zfill(2) + " " + w_surround[1] +
+              " ║║│ " + b_surround[0] + " BLACK:      " + str(len(self.blacks)).zfill(2) + " " + b_surround[1] + "  ││")
+        print("  ╚╩═════════════════════════╩┴┴─────────────────────────┴┘")
         print("      A      B      C      D      E      F      G      H   ")
-        # print("---+-------+-------+-------+-------+-------+-------+-------+-------|")
-        rh = 4
-        for line_no in range(rh * 8 - 1):
-            if line_no % rh == rh-1:
-                heck = 5
-                # print("---+-------+-------+-------+-------+-------+-------+-------+-------|")
-            else:
-                output = self.number_column[line_no // rh][line_no % rh] # + "|"
-                for column in range(8):
-                    output += self.square_text(line_no, column)
-                print(output)
-        # print("---'-------'-------'-------'-------'-------'-------'-------'-------'")
+        '''
+        ╠ ╣ ╩ ╦ ╬ ║ ╔ ╗ ╚ ╝ ═
+        ├ ┤ ┴ ┬ ┼ │ ┌ ┐ └ ┘ ─
+        , "║   ║"
+         "│░░░│",
+        '''
+        rh = 3
+        for line_no in range(rh * 8):
+            output = self.number_column[line_no // rh][line_no % rh]
+            for column in range(8):
+                output += self.squares[column, line_no // rh].print(line_no % rh)
+            print(output)
 
     def square_text(self, line_no, column):
-        return Square.print(self.squares[(column, line_no // 4)], line_no % 4) # + "|"
+        return Square.print(self.squares[(column, line_no // 4)], line_no % 4)
 
     def move(self, start, finish):
         self.squares[finish].set_content(self.squares[start].content)
@@ -100,7 +115,7 @@ class Board(object):
         return self.squares[piece].content.faction
 
     def piece_rank(self, piece):
-        return self.squares[piece].content.rank
+        return self.squares[piece].content.crown
 
     def square_highlighted(self, loc):
         return self.squares[loc].highlighted
@@ -113,6 +128,12 @@ class Board(object):
 
     def delete_piece(self, loc):
         self.squares[loc].delete_content()
+
+    def get_faction_pieces(self, faction):
+        if faction == 0:
+            return self.whites
+        elif faction == 1:
+            return self.blacks
 
     def abdicate(self, loc):
         self.squares[loc].abdicate()

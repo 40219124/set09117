@@ -17,7 +17,7 @@ class GameLogic(object):
         options = []
         min_y = -1
         max_y = 1
-        if board.piece_rank(loc) == 0:
+        if not board.piece_rank(loc):
             if board.piece_faction(loc) == 0:
                 max_y = min_y
             else:
@@ -36,7 +36,7 @@ class GameLogic(object):
         options = []
         min_y = -2
         max_y = 2
-        if board.piece_rank(loc) == 0:
+        if not board.piece_rank(loc):
             if board.piece_faction(loc) == 0:
                 max_y = min_y
             else:

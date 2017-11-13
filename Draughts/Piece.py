@@ -14,14 +14,14 @@ class Piece(object):
 
     def __init__(self, faction, rank):
         self.faction = faction
-        self.rank = rank
+        self.crown = rank
         self.selected = False
 
     def rank_up(self):
-        self.rank = True
+        self.crown = True
 
     def abdicate(self):
-        self.rank = False
+        self.crown = False
 
     def select(self):
         if not self.selected:
@@ -37,11 +37,11 @@ class Piece(object):
 
     def equals(self, piece):
         self.faction = piece.faction
-        self.rank = piece.rank
+        self.crown = piece.crown
 
     def clear(self):
         self.faction = -1
-        self.rank = 0
+        self.crown = False
         self.selected = 0
 
     def print(self, line_no):
@@ -49,12 +49,12 @@ class Piece(object):
         if self.faction < 0:
             output += Piece.no_piece[line_no]
         elif self.faction == 0:
-            if self.rank == 1:
+            if self.crown:
                 output += Piece.white_crown[line_no]
             else:
                 output += Piece.white[line_no]
         else:
-            if self.rank == 1:
+            if self.crown:
                 output += Piece.black_crown[line_no]
             else:
                 output += Piece.black[line_no]

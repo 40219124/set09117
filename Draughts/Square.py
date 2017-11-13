@@ -17,7 +17,7 @@ class Square(object):
         assert isinstance(piece, Piece), "Data is not of type 'Piece'"
         self.content.equals(piece)
         for i in range(2):
-            if self.y == i * 7 and self.content.faction == i and self.content.rank == 0:
+            if self.y == i * 7 and self.content.faction == i and not self.content.crown:
                 self.content.rank_up()
 
     def get_content(self):
