@@ -1,23 +1,32 @@
 from Move import Move
-from Stack import Stack
+from Deque import Deque
 
 
 class Turn(object):
 
     def __init__(self):
-        self.moves = Stack()
+        self.moves = Deque()
 
-    def push_move(self, move):
+    def push_past(self, move):
         if isinstance(move, Move):
-            self.moves.push(move)
+            self.moves.add_front(move)
         else:
-            print("Only put the moves on this stack.")
+            print("Only put the moves in this deque.")
 
-    def pop_move(self):
-        return self.moves.pop()
+    def pop_past(self):
+        return self.moves.remove_front()
 
-    def peek_move(self):
-        return self.moves.peek()
+    def push_future(self, move):
+        if isinstance(move, Move):
+            self.moves.add_rear(move)
+        else:
+            print("Only put the moves in this deque.")
+
+    def pop_future(self):
+        return self.moves.remove_rear()
+
+    '''def peek_move(self):
+        return self.moves.peek()'''
 
     def has_moves(self):
         return not self.moves.is_empty()
