@@ -5,6 +5,8 @@ class Square(object):
 
     select_left = ["/", "|", "\\"]
     select_right = ["\\", "|", "/"]
+    force_left = [" ", "<", " "]
+    force_right = [" ", ">", " "]
     highlight_char = "~"
 
     def __init__(self, x, y):
@@ -31,10 +33,12 @@ class Square(object):
 
     def print(self, line_no):
         assert 0 <= line_no < 3, "Line number, '%r' invalid for squares" % line_no
-        if self.content.selected == 1:
+        if self.content.selected:
             return self.select_left[line_no] + self.content.print(line_no) + self.select_right[line_no]
         elif self.highlighted:
             return self.highlight_char + self.content.print(line_no) + self.highlight_char
+        elif self.content.forced:
+            return self.force_left[line_no] + self.content.print(line_no) + self.force_right[line_no]
         if (self.x + self.y) % 2 == 0:
             return " " + self.content.print(line_no) + " "
         else:
@@ -57,3 +61,9 @@ class Square(object):
 
     def deselect_piece(self):
         self.content.deselect()
+
+    def force(self):
+        self.content.force()
+
+    def no_force(self):
+        self.content.no_force()

@@ -34,5 +34,8 @@ class Turn(object):
     def move_count(self):
         return self.moves.size()
 
+    def equals(self, turn):
+        self.moves.equals(turn.moves)
+
     def clear(self):
         self.moves.clear()

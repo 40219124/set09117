@@ -16,6 +16,7 @@ class Piece(object):
         self.faction = faction
         self.crown = rank
         self.selected = False
+        self.forced = False
 
     def rank_up(self):
         self.crown = True
@@ -34,6 +35,18 @@ class Piece(object):
             self.selected = False
         else:
             print("This piece wasn't selected.")
+
+    def force(self):
+        if not self.forced:
+            self.forced = True
+        else:
+            print("Already forced")
+
+    def no_force(self):
+        if self.forced:
+            self.forced = False
+        else:
+            print("Not forced")
 
     def equals(self, piece):
         self.faction = piece.faction

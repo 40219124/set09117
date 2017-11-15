@@ -11,8 +11,9 @@ class Board(object):
         for x in range(8):
             for y in range(8):
                 self.squares[(x, y)] = Square(x, y)
-        self.default_board()
-        self.whites, self.blacks = [], []
+        self.test_board()
+        self.whites = []
+        self.blacks = []
         self.find_pieces()
         self.number_column = []
         for i in range(8):
@@ -57,12 +58,10 @@ class Board(object):
                     piece_list_white.append((x, y))
                 elif self.get_piece((x, y)).faction == 1:
                     piece_list_black.append((x, y))
-        self.whites, self.blacks = piece_list_white, piece_list_black
+        self.whites = piece_list_white
+        self.blacks = piece_list_black
 
     def print(self, faction):
-        self.find_pieces()
-        print()
-        print()
         w_surround = ["   ", "   "]
         b_surround = w_surround
         if faction == 0:
@@ -110,6 +109,12 @@ class Board(object):
 
     def deselect_piece(self, piece):
         self.squares[piece].deselect_piece()
+
+    def force(self, loc):
+        self.squares[loc].force()
+
+    def no_force(self, loc):
+        self.squares[loc].no_force()
 
     def piece_faction(self, piece):
         return self.squares[piece].content.faction

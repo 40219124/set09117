@@ -28,8 +28,10 @@ class Timeline(object):
     def undo(self):
         if self.count_past() > 0:
             past_turn = self.past.remove_front()
+            copy = Turn()
+            copy.equals(past_turn)
             self.add_future(past_turn)
-            return past_turn
+            return copy
         else:
             print("Nothing to undo.")
             return Turn()
@@ -37,8 +39,10 @@ class Timeline(object):
     def redo(self):
         if self.count_future() > 0:
             future_move = self.future.pop()
+            copy = Turn()
+            copy.equals(future_move)
             self.add_past(future_move)
-            return future_move
+            return copy
         else:
             print("Nothing to redo.")
             return Turn()

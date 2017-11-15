@@ -1,3 +1,6 @@
+from Move import Move
+
+
 class Deque(object):
 
     def __init__(self):
@@ -20,6 +23,12 @@ class Deque(object):
 
     def size(self):
         return len(self.deque)
+
+    def equals(self, deque):
+        for move in deque.deque:
+            copy = Move()
+            copy.equals(move)
+            self.add_front(copy)
 
     def clear(self):
         self.deque = []
