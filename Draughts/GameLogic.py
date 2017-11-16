@@ -9,8 +9,6 @@ def valid_square(string):
 
 
 class GameLogic(object):
-    def __init__(self):
-        self.good = "yes"
 
     @staticmethod
     def move_options(board, loc):

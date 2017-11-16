@@ -135,26 +135,17 @@ class GameMaster(object):
                         elif self.board.square_highlighted(prompt):
                             # Set up basic move
                             move = Move()
-                            move.start = self.selected
-                            move.end = prompt
-                            # If becoming a king this turn
-                            if (8 - self.active_faction) % 8 == prompt[1] and not self.board.piece_rank(self.selected):
-                                move.crowned = True
                             # If moving into an adjacent empty space
                             if -1 <= prompt[0] - self.selected[0] <= 1:
-                                self.board.move(self.selected, prompt)
+                                # Make move
+                                move.equals(self.board.move(self.selected, prompt))
                                 # Deselect the piece
                                 self.selected = (-1, -1)
                                 self.low_light()
                             # If moving to a non adjacent space (taking a piece)
                             else:
-                                took_from = ((self.selected[0] + prompt[0]) / 2, (self.selected[1] + prompt[1]) / 2)
-                                # Add additional data to the move
-                                move.did_take = True
-                                move.took_from = took_from
-                                move.took_piece.equals(self.board.get_piece(took_from))
                                 # Take the piece and deselect everything
-                                self.board.move(self.selected, prompt)
+                                move.equals(self.board.move(self.selected, prompt))
                                 self.low_light()
                                 # Find the options for taking pieces from the new position
                                 self.highlighted = GameLogic.take_options(self.board, prompt)
