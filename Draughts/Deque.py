@@ -12,11 +12,17 @@ class Deque(object):
     def remove_rear(self):
         return self.deque.pop(0)
 
+    def peek_rear(self):
+        return self.deque[0]
+
     def add_front(self, move):
         self.deque.append(move)
 
     def remove_front(self):
         return self.deque.pop()
+
+    def peek_front(self):
+        return self.deque[len(self.deque) - 1]
 
     def is_empty(self):
         return self.size() == 0

@@ -1,5 +1,6 @@
 from Square import Square
 from Piece import Piece
+from Move import Move
 
 
 class Board(object):
@@ -90,13 +91,29 @@ class Board(object):
         return Square.print(self.squares[(column, line_no // 4)], line_no % 4)
 
     def move(self, start, finish):
+        # Move initialisation
+        move = Move()
+        move.start = start
+        move.end = finish
+        was_crowned = self.piece_rank(start)
+        # Set new piece
         self.squares[finish].set_content(self.squares[start].content)
+        if was_crowned != self.piece_rank(finish):
+            move.crowned = True
+        # Delete old piece
         self.squares[start].deselect_piece()
         self.squares[start].delete_content()
         # If taking a piece
         if not (-1 <= finish[0] - start[0] <= 1):
-            taking = ((start[0] + finish[0]) / 2, (start[1] + finish[1]) / 2)
+            # Calculate take location
+            taking = ((start[0] + finish[0]) // 2, (start[1] + finish[1]) // 2)
+            # Move taking information
+            move.did_take = True
+            move.took_from = taking
+            move.took_piece.equals(self.get_piece(taking))
+            # Remove taken piece
             self.squares[taking].delete_content()
+        return move
 
     def highlight_square(self, loc):
         self.squares[loc].highlight()
