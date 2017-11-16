@@ -1,5 +1,6 @@
 from Board import Board
 from GameLogic import GameLogic
+from ArtI import ArtI
 from Turn import Turn
 from Move import Move
 from Timeline import Timeline
@@ -9,9 +10,14 @@ def str_to_tup(string):
     return int(string[0: 1]), int(string[1])
 
 
+def tup_to_str(tup):
+    return GameMaster.numbersToLetters[tup[0]] + str(tup[1])
+
+
 class GameMaster(object):
 
     lettersToNumbers = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
+    numbersToLetters = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
     faction_to_string = {0: "White", 1: "Black"}
 
     def __init__(self):
@@ -24,6 +30,7 @@ class GameMaster(object):
         self.mid_turn = False
         self.selected = (-1, -1)
         self.message = ""
+        self.ai_choices = []
 
     def run_game(self):
         play_on = True
@@ -62,118 +69,127 @@ class GameMaster(object):
             print()
             print()
             self.message = ""
-            # take input
-            text_prompt = input().lower()
-            # close if exit is typed
-            if text_prompt == "exit":
-                    play_on = False
+            # Ai turn
+            if self.active_faction == 1 and self.timeline.count_future() == 0:
+                self.ai_choices = ArtI.get_turn(self.board, self.forced, self.active_faction)
+                for move in self.ai_choices:
+                    self.turn.push_past(move)
+                self.timeline.add_future(self.turn)
+                self.redo()
+                self.turn = Turn()
+                self.swap_turns()
+            # Not ai turn
             else:
-                # If an undo is prompted
-                if text_prompt == "undo" or text_prompt == "u":
-                    # If half way through a turn undo current progress
-                    if self.mid_turn:
-                        self.undo_half()
-                        self.mid_turn = False
-                        self.message = "Reset to the start of your turn"
-                    # If no piece is currently selected undo a turn
-                    elif self.selected == (-1, -1):
-                        # Undo a turn if there are turns to undo
-                        if self.timeline.count_past() > 0:
-                            self.undo()
-                            self.swap_turns()
-                            self.message = "Turn undone."
+                # take input
+                text_prompt = input().lower()
+                # close if exit is typed
+                if text_prompt == "exit":
+                        play_on = False
+                else:
+                    # If an undo is prompted
+                    if text_prompt == "undo" or text_prompt == "u":
+                        # If half way through a turn undo current progress
+                        if self.mid_turn:
+                            self.undo_half()
+                            self.mid_turn = False
+                            self.message = "Reset to the start of your turn"
+                        # If no piece is currently selected undo a turn
+                        elif self.selected == (-1, -1):
+                            # Undo a turn if there are turns to undo
+                            if self.timeline.count_past() > 0:
+                                self.undo()
+                                self.swap_turns()
+                                self.message = "Turn undone."
+                            else:
+                                self.message = "Nothing to undo."
+                        # If a piece is selected, undo the selection
                         else:
-                            self.message = "Nothing to undo."
-                    # If a piece is selected, undo the selection
-                    else:
-                        self.message = "Piece deselected."
-                    # Do cleaning for all possibilities
-                    self.low_light()
-                    self.deselect()
-                    self.board.find_pieces()
-                # If a redo is prompted
-                elif (text_prompt == "redo" or text_prompt == "r") and not self.mid_turn:
-                    # If there are turns to be redone
-                    if self.timeline.count_future() > 0:
-                        self.redo()
+                            self.message = "Piece deselected."
+                        # Do cleaning for all possibilities
                         self.low_light()
                         self.deselect()
-                        self.swap_turns()
-                        self.message = "Turn redone."
-                        self.board.find_pieces()
-                    else:
-                        self.message = "Nothing to redo."
-                # if a 2 character input, assume grid square and format appropriately
-                elif len(text_prompt) == 2:
-                    if (text_prompt[0] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and \
-                            (text_prompt[1] in ['1', '2', '3', '4', '5', '6', '7', '8']):
-                        prompt = (self.lettersToNumbers[text_prompt[0]], int(text_prompt[1]) - 1)
-                        # If no piece is currently selected
-                        if self.selected == (-1, -1):
-                            # If you didn't pick one of your pieces try again
-                            if self.active_faction != self.board.piece_faction(prompt):
-                                self.message = "'" + text_prompt + "' is not one of your pieces."
-                            # If the prompt is not a forced take
-                            elif not (prompt in self.forced):
-                                self.message = "A different piece is required to move."
-                            # Else select the piece
-                            else:
+                    # If a redo is prompted
+                    elif (text_prompt == "redo" or text_prompt == "r") and not self.mid_turn:
+                        # If there are turns to be redone
+                        if self.timeline.count_future() > 0:
+                            self.redo()
+                            self.low_light()
+                            self.deselect()
+                            self.swap_turns()
+                            self.message = "Turn redone."
+                        else:
+                            self.message = "Nothing to redo."
+                    # if a 2 character input, assume grid square and format appropriately
+                    elif len(text_prompt) == 2:
+                        if (text_prompt[0] in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']) and \
+                                (text_prompt[1] in ['1', '2', '3', '4', '5', '6', '7', '8']):
+                            prompt = (self.lettersToNumbers[text_prompt[0]], int(text_prompt[1]) - 1)
+                            # If no piece is currently selected
+                            if self.selected == (-1, -1):
+                                # If you didn't pick one of your pieces try again
+                                if self.active_faction != self.board.piece_faction(prompt):
+                                    self.message = "'" + text_prompt + "' is not one of your pieces."
+                                # If the prompt is not a forced take
+                                elif not (prompt in self.forced):
+                                    self.message = "A different piece is required to move."
+                                # Else select the piece
+                                else:
+                                    self.sel_and_high(prompt)
+                                    self.message = "'" + text_prompt + "' selected."
+                            # If you picked the already selected one, deselect it
+                            elif self.selected == prompt and not self.mid_turn:
+                                self.deselect()
+                                self.low_light()
+                                self.message = "'" + text_prompt + "' deselected."
+                            # If you picked another of your faction, make it the selected piece
+                            elif self.board.piece_faction(prompt) == self.active_faction and not self.mid_turn:
+                                self.deselect()
+                                self.low_light()
                                 self.sel_and_high(prompt)
                                 self.message = "'" + text_prompt + "' selected."
-                        # If you picked the already selected one, deselect it
-                        elif self.selected == prompt and not self.mid_turn:
-                            self.deselect()
-                            self.low_light()
-                            self.message = "'" + text_prompt + "' deselected."
-                        # If you picked another of your faction, make it the selected piece
-                        elif self.board.piece_faction(prompt) == self.active_faction and not self.mid_turn:
-                            self.deselect()
-                            self.low_light()
-                            self.sel_and_high(prompt)
-                            self.message = "'" + text_prompt + "' selected."
-                        # If an empty space is selected move there
-                        elif self.board.square_highlighted(prompt):
-                            # Set up basic move
-                            move = Move()
-                            # If moving into an adjacent empty space
-                            if -1 <= prompt[0] - self.selected[0] <= 1:
-                                # Make move
-                                move.equals(self.board.move(self.selected, prompt))
-                                # Deselect the piece
-                                self.selected = (-1, -1)
-                                self.low_light()
-                            # If moving to a non adjacent space (taking a piece)
-                            else:
-                                # Take the piece and deselect everything
-                                move.equals(self.board.move(self.selected, prompt))
-                                self.low_light()
-                                # Find the options for taking pieces from the new position
-                                self.highlighted = GameLogic.take_options(self.board, prompt)
-                                # If there are options lock on to the piece, and highlight a new set of moves
-                                if len(self.highlighted) > 0:
-                                    self.mid_turn = True
-                                    self.sel_and_high(prompt)
-                                # Else end the turn and deselect as normal
-                                else:
-                                    self.mid_turn = False
+                            # If an empty space is selected move there
+                            elif self.board.square_highlighted(prompt):
+                                # Set up basic move
+                                move = Move()
+                                # If moving into an adjacent empty space
+                                if -1 <= prompt[0] - self.selected[0] <= 1:
+                                    # Make move
+                                    move.equals(self.board.move(self.selected, prompt))
+                                    # Deselect the piece
                                     self.selected = (-1, -1)
-                            # Add move to current turn
-                            self.turn.push_past(move)
-                            self.message = "Moved piece to '" + text_prompt + "'."
-                            # If not mid-turn push the Turn to the timeline and swap teams
-                            if not self.mid_turn:
-                                self.timeline.add_turn(self.turn)
-                                self.turn = Turn()
-                                self.swap_turns()
-                        # No valid turn was taken
+                                    self.low_light()
+                                # If moving to a non adjacent space (taking a piece)
+                                else:
+                                    # Take the piece and deselect everything
+                                    move.equals(self.board.move(self.selected, prompt))
+                                    self.low_light()
+                                    # Find the options for taking pieces from the new position
+                                    self.highlighted = GameLogic.take_options(self.board, prompt)
+                                    # If there are options lock on to the piece, and highlight a new set of moves
+                                    if len(self.highlighted) > 0:
+                                        self.mid_turn = True
+                                        self.sel_and_high(prompt)
+                                    # Else end the turn and deselect as normal
+                                    else:
+                                        self.mid_turn = False
+                                        self.selected = (-1, -1)
+                                # Add move to current turn
+                                self.turn.push_past(move)
+                                self.message = "Moved piece to '" + text_prompt + "'."
+                                # If not mid-turn push the Turn to the timeline and swap teams
+                                if not self.mid_turn:
+                                    self.timeline.add_turn(self.turn)
+                                    self.turn = Turn()
+                                    self.swap_turns()
+                            # No valid turn was taken
+                            else:
+                                self.message = "'" + text_prompt + "' is not a valid location to move to."
+                            self.board.find_pieces()
                         else:
-                            self.message = "'" + text_prompt + "' is not a valid location to move to."
-                        self.board.find_pieces()
+                            self.message = "'" + text_prompt + "' is not an existing grid square."
+                    # No recognised command given
                     else:
-                        self.message = "'" + text_prompt + "' is not an existing grid square."
-                # No recognised command given
-                else:
-                    self.message = "'" + text_prompt + "' is not in the list of valid commands."
+                        self.message = "'" + text_prompt + "' is not in the list of valid commands."
 
     def get_options(self, prompt):
         self.highlighted = GameLogic.take_options(self.board, prompt)
@@ -222,6 +238,7 @@ class GameMaster(object):
                 self.board.abdicate(move.start)
             if move.did_take:
                 self.board.set_piece(move.took_from, move.took_piece)
+        self.board.find_pieces()
 
     def undo_half(self):
         while self.turn.has_moves() > 0:
@@ -233,6 +250,7 @@ class GameMaster(object):
             if move.did_take:
                 self.board.set_piece(move.took_from, move.took_piece)
         self.turn = Turn()
+        self.board.find_pieces()
 
     def redo(self):
         deque = self.timeline.redo()
@@ -242,3 +260,4 @@ class GameMaster(object):
             self.board.delete_piece(move.start)
             if move.did_take:
                 self.board.delete_piece(move.took_from)
+        self.board.find_pieces()

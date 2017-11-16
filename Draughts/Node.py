@@ -9,7 +9,6 @@ class Node(object):
         self.active_faction = -1
         self.lost = False
         self.root = False
-        self.turn_start = False
 
     def get_move(self):
         return self.move

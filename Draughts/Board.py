@@ -12,7 +12,7 @@ class Board(object):
         for x in range(8):
             for y in range(8):
                 self.squares[(x, y)] = Square(x, y)
-        self.test_board()
+        self.default_board()
         self.whites = []
         self.blacks = []
         self.find_pieces()
