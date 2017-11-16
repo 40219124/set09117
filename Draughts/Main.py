@@ -1,4 +1,7 @@
 from GameMaster import GameMaster
 
-gm = GameMaster()
-gm.run_game()
+while True:
+    gm = GameMaster()
+    value = gm.run_game()
+    if value < 0:
+        break
